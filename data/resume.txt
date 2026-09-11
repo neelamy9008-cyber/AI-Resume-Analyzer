@@ -1,0 +1,15 @@
+Neelam Yadav
+
+Computer Science student specializing in Artificial Intelligence.
+
+Skills:
+C++, Python, JavaScript, HTML, CSS, SQL
+Machine Learning
+Data Structures and Algorithms
+Object Oriented Programming
+Git and GitHub
+
+Projects:
+AI-based women safety application.
+Machine learning projects using Python and Scikit-learn.
+Web development projects using React and JavaScript.

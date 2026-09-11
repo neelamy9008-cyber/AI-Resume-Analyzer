@@ -1,0 +1,17 @@
+We are looking for a Machine Learning Intern.
+
+Requirements:
+Python
+Machine Learning
+Scikit-learn
+SQL
+Data Analysis
+Statistics
+Git and GitHub
+
+Good to have:
+C++
+JavaScript
+React
+Deep Learning
+TensorFlow
