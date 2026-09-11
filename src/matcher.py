@@ -2,21 +2,31 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 
+from docx_reader import extract_text_from_docx
 from skills import extract_skills
 from recommendations import generate_recommendations
 
+import sys
+sys.path.append("src")
 
-# Read resume
-with open("data/resume.txt", "r", encoding="utf-8") as file:
-    resume = file.read()
 
-# Read job description
+# -----------------------------
+# 1. READ RESUME FROM DOCX
+# -----------------------------
+
+resume = extract_text_from_docx("data/resume.docx")
+
+
+# -----------------------------
+# 2. READ JOB DESCRIPTION
+# -----------------------------
+
 with open("data/job_description.txt", "r", encoding="utf-8") as file:
     job_description = file.read()
 
 
 # -----------------------------
-# 1. TF-IDF SIMILARITY
+# 3. TF-IDF SIMILARITY
 # -----------------------------
 
 vectorizer = TfidfVectorizer()
@@ -35,7 +45,7 @@ tfidf_score = tfidf_similarity[0][0] * 100
 
 
 # -----------------------------
-# 2. SEMANTIC SIMILARITY
+# 4. SEMANTIC SIMILARITY
 # -----------------------------
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -52,7 +62,7 @@ semantic_score = semantic_similarity[0][0] * 100
 
 
 # -----------------------------
-# 3. SKILL MATCH
+# 5. SKILL MATCHING
 # -----------------------------
 
 resume_skills = extract_skills(resume)
@@ -73,59 +83,63 @@ for skill in job_skills:
 
 
 if len(job_skills) > 0:
-    skill_score = (len(matched_skills) / len(job_skills)) * 100
+    skill_score = (
+        len(matched_skills) / len(job_skills)
+    ) * 100
 else:
     skill_score = 0
 
 
 # -----------------------------
-# 4. FINAL SCORE
+# 6. FINAL SCORE
 # -----------------------------
 
 final_score = (
-    tfidf_score * 0.30
-    + semantic_score * 0.40
+    semantic_score * 0.40
     + skill_score * 0.30
+    + tfidf_score * 0.30
 )
 
 
 # -----------------------------
-# 5. RECOMMENDATIONS
+# 7. RECOMMENDATIONS
 # -----------------------------
 
-recommendations = generate_recommendations(missing_skills)
+recommendations = generate_recommendations(
+    missing_skills
+)
 
 
 # -----------------------------
-# 6. DISPLAY RESULTS
+# 8. DISPLAY RESULTS
 # -----------------------------
 
 print("================================")
 print("       AI RESUME ANALYZER")
 print("================================")
 
-print(f"\n📄 TF-IDF Score:       {tfidf_score:.2f}%")
-print(f"🧠 Semantic Score:     {semantic_score:.2f}%")
-print(f"🛠️ Skill Match Score:  {skill_score:.2f}%")
+print(f"\n📄 TF-IDF Score:      {tfidf_score:.2f}%")
+print(f"🧠 Semantic Score:    {semantic_score:.2f}%")
+print(f"🛠️ Skill Match:       {skill_score:.2f}%")
 
 print("--------------------------------")
-print(f"🎯 FINAL MATCH SCORE:  {final_score:.2f}%")
+print(f"🎯 FINAL SCORE:       {final_score:.2f}%")
 print("--------------------------------")
 
 
-print("\n✅ Matched Skills:")
+print("\n✅ MATCHED SKILLS:")
 
 for skill in matched_skills:
     print("-", skill)
 
 
-print("\n❌ Missing Skills:")
+print("\n❌ MISSING SKILLS:")
 
 for skill in missing_skills:
     print("-", skill)
 
 
-print("\n💡 Recommendations:")
+print("\n💡 RECOMMENDATIONS:")
 
 for recommendation in recommendations:
     print("-", recommendation)
